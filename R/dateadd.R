@@ -132,7 +132,7 @@ datediff <- function(start, end, interval = "day") {
       "duckdb" = glue::glue("datediff('day', {start}, {end})"),
       "sqlite" = glue::glue("(JULIANDAY(end, 'unixepoch') - JULIANDAY(start, 'unixepoch'))"),
       "bigquery" = glue::glue("DATE_DIFF({end}, {start}, DAY)"),
-      "snowflake" = glue::glue('DATEDIFF(day, "{start}", "{end}")'),
+      "snowflake" = glue::glue('DATEDIFF(day, {start}, {end})'),
       rlang::abort(glue::glue("Connection type {paste(class(dot$src$con), collapse = ', ')} is not supported!"))
     )
   } else {
@@ -254,7 +254,7 @@ datepart <- function(date, interval = "year", dbms = NULL) {
       "CAST(STRFTIME('%Y', {date}, 'unixepoch') AS INT)",
       "CAST(STRFTIME('%{substr(interval, 1, 1)}', {date}, 'unixepoch') AS INT)"),
     "bigquery" = "EXTRACT({toupper(interval)} from {date})",
-    "snowflake" = 'DATE_PART({interval}, "{date}")'
+    "snowflake" = 'DATE_PART({interval}, {date})'
   )
   dbplyr::sql(as.character(glue::glue(sql)))
 }
